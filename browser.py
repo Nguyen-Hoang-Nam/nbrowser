@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (
     QTabWidget,
     QWidget,
 )
-from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtWebEngineWidgets import QWebEngineSettings, QWebEngineView
 
 
 class Browser(QMainWindow):
@@ -139,6 +139,9 @@ class Browser(QMainWindow):
         googleUrl = QUrl("https://www.google.com")
         webView.setUrl(googleUrl)
         webView.loadFinished.connect(self.changePage)
+        webView.settings().setAttribute(
+            QWebEngineSettings.WebAttribute.PluginsEnabled, True
+        )
 
         frame = QFrame()
         frame.setFrameStyle(QFrame.Panel)
