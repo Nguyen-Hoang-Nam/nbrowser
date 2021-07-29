@@ -14,6 +14,19 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtWebEngineWidgets import QWebEngineSettings, QWebEngineView
 
+styleSheet = """
+    QTabWidget::pane {
+        border: 0;
+    }
+
+    QTabBar::close-button {
+        image: url(images/close.png);
+        subcontrol-origin: padding;
+        subcontrol-position: right;
+        margin: 4px 2px 4px 4px;
+    }
+"""
+
 
 class Browser(QMainWindow):
     def __init__(self):
@@ -48,7 +61,10 @@ class Browser(QMainWindow):
         self.setCentralWidget(self.tabs)
         self.showMaximized()
 
-        QShortcut(QKeySequence("Ctrl+T"), self, self.addTab)
+        QShortcut("t", self, self.addTab)
+        QShortcut(QKeySequence("Shift+k"), self, self.nextTab)
+        QShortcut(QKeySequence("Shift+J"), self, self.previousTab)
+        QShortcut("x", self, self.closeCurrentTab)
 
     def addTab(self):
         newPage = QWidget()
@@ -57,6 +73,33 @@ class Browser(QMainWindow):
 
         index = self.tabs.currentIndex()
         self.tabs.setCurrentIndex(index + 1)
+
+    def nextTab(self):
+        index = self.tabs.currentIndex()
+
+        if index < self.tabs.count() - 1:
+            self.tabs.setCurrentIndex(index + 1)
+        else:
+            self.tabs.setCurrentIndex(0)
+
+    def previousTab(self):
+        index = self.tabs.currentIndex()
+
+        if index != 0:
+            self.tabs.setCurrentIndex(index - 1)
+        else:
+            self.tabs.setCurrentIndex(self.tabs.count() - 1)
+
+    def closeCurrentTab(self):
+        index = self.tabs.currentIndex()
+        del self.lNameLine[index]
+        del self.tabWebView[index]
+
+        # Close window when close the last tab
+        if self.tabs.count() == 1:
+            self.close()
+        else:
+            self.tabs.removeTab(index)
 
     def closeTab(self, tabId):
         del self.lNameLine[tabId]
@@ -145,6 +188,7 @@ class Browser(QMainWindow):
 
         frame = QFrame()
         frame.setFrameStyle(QFrame.Panel)
+        frame.setStyleSheet("border: 0; border-top: 1px solid black;")
 
         gridLayout = QGridLayout(frame)
         gridLayout.setContentsMargins(0, 0, 0, 0)
@@ -180,7 +224,9 @@ class Browser(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
+    app.setStyleSheet(styleSheet)
     window = Browser()
+    # window.setWindowFlags(Qt.WindowType.WindowCloseButtonHint)
     window.show()
     sys.exit(app.exec_())
 

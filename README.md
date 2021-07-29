@@ -10,10 +10,10 @@ Not much, I just have created simple browser based on [this](https://pythonprogr
 
 ## Todo
 
-- [ ] Change close icon in tab
+- [x] Change close icon in tab
 - [ ] Add tab switcher
 - [ ] Add javascript's console as terminal
-- [ ] Add shortcut
+- [x] Add shortcut
 - [x] Play video
 - [ ] Show tabs in window's title
 
